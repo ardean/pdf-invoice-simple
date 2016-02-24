@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "pdfmake": "orbin-ch/pdfmake#fix-webpack-win",
-    "roboto-base64": "orbin-ch/roboto-base64"
+    "roboto-base64": "^0.1.1"
   },
   "devDependencies": {
     "babel-core": "^6.4.0",
