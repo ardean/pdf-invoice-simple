@@ -1,0 +1,43 @@
+{
+  "name": "pdf-invoice-simple",
+  "description": "A simple pdf invoice template",
+  "version": "0.1.0",
+  "author": "Orbin",
+  "keywords": [
+    "pdf",
+    "invoice",
+    "simple"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orbin-ch/pdf-invoice-simple"
+  },
+  "main": "dist/pdf-invoice-simple.js",
+  "license": "MIT",
+  "dependencies": {
+    "pdfmake": "orbin-ch/pdfmake#fix-webpack-win",
+    "roboto-base64": "orbin-ch/roboto-base64"
+  },
+  "devDependencies": {
+    "babel-core": "^6.4.0",
+    "babel-loader": "^6.2.1",
+    "babel-polyfill": "^6.3.14",
+    "babel-preset-es2015": "^6.3.13",
+    "clean-webpack-plugin": "^0.1.8",
+    "html-webpack-plugin": "^2.7.1",
+    "jquery": "^2.2.0",
+    "jshint-loader": "^0.8.3",
+    "moment": "^2.11.2",
+    "webpack": "^1.12.11",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.production.babel.js",
+    "start": "webpack-dev-server --config webpack.development.babel.js"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  }
+}
