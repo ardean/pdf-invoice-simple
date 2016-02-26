@@ -1,7 +1,7 @@
 {
   "name": "pdf-invoice-simple",
   "description": "A simple pdf invoice template",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Orbin",
   "keywords": [
     "pdf",
@@ -15,8 +15,8 @@
   "main": "dist/pdf-invoice-simple.js",
   "license": "MIT",
   "dependencies": {
-    "pdfmake": "orbin-ch/pdfmake#fix-webpack-win",
-    "roboto-base64": "^0.1.1"
+    "pdfmake-browser": "^0.2.2",
+    "roboto-buffer": "^0.1.0"
   },
   "devDependencies": {
     "babel-core": "^6.4.0",

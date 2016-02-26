@@ -1,9 +1,5 @@
-import roboto from "roboto-base64";
-import pdfMake from "pdfmake/build/pdfmake";
-
-window.pdfMake = {
-  vfs: roboto
-};
+import Pdf from "pdfmake-browser";
+import robotoFont from "roboto-buffer";
 
 const defaultStyle = {
   fontSize: 10
@@ -62,10 +58,12 @@ const footerLayout = {
 };
 
 export default (invoice, profile) => {
-  return pdfMake.createPdf(getDoc(invoice, profile));
+  return new Pdf(getTemplate(invoice, profile), {
+    Roboto: robotoFont
+  });
 };
 
-function getDoc(invoice, profile) {
+function getTemplate(invoice, profile) {
   const organizationSettings = profile.organizationSettings;
   const address = organizationSettings.address;
   const billingAddress = invoice.billingAddress;

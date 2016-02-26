@@ -1,10 +1,10 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("roboto-base64"), require("pdfmake/build/pdfmake"));
+		module.exports = factory(require("pdfmake-browser"), require("roboto-buffer"));
 	else if(typeof define === 'function' && define.amd)
-		define(["roboto-base64", "pdfmake/build/pdfmake"], factory);
+		define(["pdfmake-browser", "roboto-buffer"], factory);
 	else {
-		var a = typeof exports === 'object' ? factory(require("roboto-base64"), require("pdfmake/build/pdfmake")) : factory(root["roboto-base64"], root["pdfmake/build/pdfmake"]);
+		var a = typeof exports === 'object' ? factory(require("pdfmake-browser"), require("roboto-buffer")) : factory(root["pdfmake-browser"], root["roboto-buffer"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
 })(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__) {
@@ -60,19 +60,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _robotoBase = __webpack_require__(1);
+	var _pdfmakeBrowser = __webpack_require__(1);
 
-	var _robotoBase2 = _interopRequireDefault(_robotoBase);
+	var _pdfmakeBrowser2 = _interopRequireDefault(_pdfmakeBrowser);
 
-	var _pdfmake = __webpack_require__(2);
+	var _robotoBuffer = __webpack_require__(2);
 
-	var _pdfmake2 = _interopRequireDefault(_pdfmake);
+	var _robotoBuffer2 = _interopRequireDefault(_robotoBuffer);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	window.pdfMake = {
-	  vfs: _robotoBase2.default
-	};
 
 	var defaultStyle = {
 	  fontSize: 10
@@ -121,10 +117,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	exports.default = function (invoice, profile) {
-	  return _pdfmake2.default.createPdf(getDoc(invoice, profile));
+	  return new _pdfmakeBrowser2.default(getTemplate(invoice, profile), {
+	    Roboto: _robotoBuffer2.default
+	  });
 	};
 
-	function getDoc(invoice, profile) {
+	function getTemplate(invoice, profile) {
 	  var organizationSettings = profile.organizationSettings;
 	  var address = organizationSettings.address;
 	  var billingAddress = invoice.billingAddress;
