@@ -1,7 +1,7 @@
 {
   "name": "pdf-invoice-simple",
   "description": "A simple pdf invoice template",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": "Orbin",
   "keywords": [
     "pdf",
