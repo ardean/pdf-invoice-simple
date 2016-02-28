@@ -1,5 +1,5 @@
 import Pdf from "pdfmake-browser";
-import robotoFont from "roboto-buffer";
+import robotoFont from "roboto-base64";
 
 const defaultStyle = {
   fontSize: 10

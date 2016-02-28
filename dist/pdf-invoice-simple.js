@@ -1,10 +1,10 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("pdfmake-browser"), require("roboto-buffer"));
+		module.exports = factory(require("pdfmake-browser"), require("roboto-base64"));
 	else if(typeof define === 'function' && define.amd)
-		define(["pdfmake-browser", "roboto-buffer"], factory);
+		define(["pdfmake-browser", "roboto-base64"], factory);
 	else {
-		var a = typeof exports === 'object' ? factory(require("pdfmake-browser"), require("roboto-buffer")) : factory(root["pdfmake-browser"], root["roboto-buffer"]);
+		var a = typeof exports === 'object' ? factory(require("pdfmake-browser"), require("roboto-base64")) : factory(root["pdfmake-browser"], root["roboto-base64"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
 })(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__) {
@@ -64,9 +64,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _pdfmakeBrowser2 = _interopRequireDefault(_pdfmakeBrowser);
 
-	var _robotoBuffer = __webpack_require__(2);
+	var _robotoBase = __webpack_require__(2);
 
-	var _robotoBuffer2 = _interopRequireDefault(_robotoBuffer);
+	var _robotoBase2 = _interopRequireDefault(_robotoBase);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -118,7 +118,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = function (invoice, profile) {
 	  return new _pdfmakeBrowser2.default(getTemplate(invoice, profile), {
-	    Roboto: _robotoBuffer2.default
+	    Roboto: _robotoBase2.default
 	  });
 	};
 

@@ -15,8 +15,8 @@
   "main": "dist/pdf-invoice-simple.js",
   "license": "MIT",
   "dependencies": {
-    "pdfmake-browser": "^0.2.2",
-    "roboto-buffer": "^0.1.0"
+    "pdfmake-browser": "^0.2.3",
+    "roboto-base64": "^0.1.2"
   },
   "devDependencies": {
     "babel-core": "^6.4.0",
