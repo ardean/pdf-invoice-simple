@@ -197,7 +197,7 @@ function getTemplate(invoice, profile) {
   });
 
   doc.content.push({
-    text: profile.invoiceSettings.note || "",
+    text: invoice.note || profile.invoiceSettings.note || "",
     margin: [0, 20, 0, 0],
     color: "gray",
     fontSize: 8
