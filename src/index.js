@@ -77,7 +77,7 @@ function getTemplate(invoice, profile) {
         postCode: address.postCode,
         city: address.city
       }),
-      margin: [0, 120, 0, 0],
+      margin: [0, 100, 0, 0],
       fontSize: 8,
       color: "gray"
     }, {
@@ -154,12 +154,18 @@ function getTemplate(invoice, profile) {
     ]);
   });
 
-  const tableFooter = [
-    ["Zwischensumme", {
-      text: invoice.subTotal.toFixed(2),
-      alignment: "right"
-    }]
-  ].concat(
+  let tableFooter = [];
+
+  if (invoice.adjustment || invoice.taxGroups.length) {
+    tableFooter.push(
+      ["Zwischensumme", {
+        text: invoice.subTotal.toFixed(2),
+        alignment: "right"
+      }]
+    );
+  }
+
+  tableFooter = tableFooter.concat(
     invoice.taxGroups.map((taxGroup) => {
       return [
         taxGroup.name, {
