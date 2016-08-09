@@ -132,6 +132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var date = options.date || (0, _moment2.default)();
 	  var dueDate = options.dueDate || (0, _moment2.default)().add(10, "days");
 	  var invoiceNumber = options.invoiceNumber || "";
+	  var customerName = options.customerName || "";
 	  var items = options.items || [];
 	  var subTotal = options.subTotal || 0;
 	  var adjustment = options.adjustment || 0;
@@ -140,8 +141,57 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var currency = options.currency || "CHF";
 	  var note = options.note;
 
-	  var invoiceNumberDescription = invoiceNumber ? "Rechnungsnummer:" : "";
-	  var invoiceNumberValue = invoiceNumber ? invoiceNumber.toString() : "";
+	  var leftFields = [];
+	  if (billingAddress.name) {
+	    leftFields.push(billingAddress.name);
+	  }
+	  if (billingAddress.attn) {
+	    leftFields.push(billingAddress.attn);
+	  }
+	  if (billingAddress.street) {
+	    leftFields.push(billingAddress.street);
+	  }
+	  var location = (billingAddress.postCode || "") + (billingAddress.city && billingAddress.postCode ? " " : "") + (billingAddress.city || "");
+	  if (location) {
+	    leftFields.push(location);
+	  }
+
+	  var rightFields = [];
+	  if (date) {
+	    rightFields.push({
+	      key: "Datum:",
+	      value: date.format("DD.MM.YYYY")
+	    });
+	  }
+	  if (dueDate) {
+	    rightFields.push({
+	      key: "Zahlbar bis:",
+	      value: dueDate.format("DD.MM.YYYY")
+	    });
+	  }
+	  if (invoiceNumber) {
+	    rightFields.push({
+	      key: "Rechnungsnummer:",
+	      value: invoiceNumber.toString()
+	    });
+	  }
+	  if (customerName) {
+	    rightFields.push({
+	      key: "Kunde:",
+	      value: customerName
+	    });
+	  }
+
+	  var headTableBody = [];
+	  var tableHeight = Math.max(leftFields.length, rightFields.length);
+	  for (var i = 0; i < tableHeight; i++) {
+	    var leftValue = leftFields[i];
+	    var rightObject = rightFields[i] || {};
+	    headTableBody.push([leftValue || "", "", rightObject.key || "", {
+	      text: rightObject.value || "",
+	      alignment: "right"
+	    }]);
+	  }
 
 	  var doc = {
 	    defaultStyle: defaultStyle,
@@ -160,16 +210,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      layout: "noBorders",
 	      table: {
 	        widths: ["auto", "*", "auto", "auto"],
-	        body: [[billingAddress.name || "", "", "Datum:", {
-	          text: date.format("DD.MM.YYYY"),
-	          alignment: "right"
-	        }], [billingAddress.street || "", "", "Zahlbar bis:", {
-	          text: dueDate.format("DD.MM.YYYY"),
-	          alignment: "right"
-	        }], [(billingAddress.postCode || "") + " " + (billingAddress.city || ""), "", invoiceNumberDescription, {
-	          text: invoiceNumberValue,
-	          alignment: "right"
-	        }]]
+	        body: headTableBody
 	      }
 	    }, {
 	      fontSize: 18,

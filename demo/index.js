@@ -11,6 +11,7 @@ const pdf = simpleInvoice({
   },
   billingAddress: {
     name: "Mein Kontakt",
+    attn: "Mr. Melk",
     street: "Strasse 2",
     postCode: "78556",
     city: "Andere Stadt"
@@ -18,6 +19,7 @@ const pdf = simpleInvoice({
   date: moment(),
   dueDate: moment().add(12, "days"),
   invoiceNumber: 12,
+  customerName: "MyCompany GmbH",
   items: [{
     name: "Item Name",
     description: "Item Description",
