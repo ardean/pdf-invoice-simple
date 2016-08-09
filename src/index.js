@@ -65,7 +65,7 @@ export default (options) => {
 };
 
 function getTemplate(options) {
-  const organizationAddress = options.organizationAddress || {};
+  const organizationAddress = options.organizationAddress || null;
   const billingAddress = options.billingAddress || {};
   const date = options.date || moment();
   const dueDate = options.dueDate || moment().add(10, "days");
@@ -135,15 +135,12 @@ function getTemplate(options) {
     ]);
   }
 
+  const organizationAddressText = organizationAddress ? getFlatAddressText(organizationAddress) : "";
+
   const doc = {
     defaultStyle: defaultStyle,
     content: [{
-      text: returnAddressText({
-        name: organizationAddress.name,
-        street: organizationAddress.street,
-        postCode: organizationAddress.postCode,
-        city: organizationAddress.city
-      }),
+      text: organizationAddressText,
       margin: [0, 100, 0, 0],
       fontSize: 8,
       color: "gray"
@@ -274,7 +271,7 @@ function getTemplate(options) {
   return doc;
 }
 
-function returnAddressText(address) {
+function getFlatAddressText(address) {
   const location = [address.postCode, address.city].join(" ").trim();
 
   return [address.name, address.street, location].filter((value) => {

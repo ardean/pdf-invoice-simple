@@ -127,7 +127,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	function getTemplate(options) {
-	  var organizationAddress = options.organizationAddress || {};
+	  var organizationAddress = options.organizationAddress || null;
 	  var billingAddress = options.billingAddress || {};
 	  var date = options.date || (0, _moment2.default)();
 	  var dueDate = options.dueDate || (0, _moment2.default)().add(10, "days");
@@ -193,15 +193,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }]);
 	  }
 
+	  var organizationAddressText = organizationAddress ? getFlatAddressText(organizationAddress) : "";
+
 	  var doc = {
 	    defaultStyle: defaultStyle,
 	    content: [{
-	      text: returnAddressText({
-	        name: organizationAddress.name,
-	        street: organizationAddress.street,
-	        postCode: organizationAddress.postCode,
-	        city: organizationAddress.city
-	      }),
+	      text: organizationAddressText,
 	      margin: [0, 100, 0, 0],
 	      fontSize: 8,
 	      color: "gray"
@@ -316,7 +313,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return doc;
 	}
 
-	function returnAddressText(address) {
+	function getFlatAddressText(address) {
 	  var location = [address.postCode, address.city].join(" ").trim();
 
 	  return [address.name, address.street, location].filter(function (value) {
