@@ -1,3 +1,4 @@
+import moment from "moment";
 import Pdf from "pdfmake-browser";
 import robotoFont from "roboto-base64";
 
@@ -57,25 +58,37 @@ const footerLayout = {
   }
 };
 
-export default (invoice, profile) => {
-  return new Pdf(getTemplate(invoice, profile), {
+export default (options) => {
+  return new Pdf(getTemplate(options), {
     Roboto: robotoFont
   });
 };
 
-function getTemplate(invoice, profile) {
-  const organizationSettings = profile.organizationSettings;
-  const address = organizationSettings.address;
-  const billingAddress = invoice.billingAddress;
+function getTemplate(options) {
+  const organizationAddress = options.organizationAddress || {};
+  const billingAddress = options.billingAddress || {};
+  const date = options.date || moment();
+  const dueDate = options.dueDate || moment().add(10, "days");
+  const invoiceNumber = options.invoiceNumber || "";
+  const items = options.items || [];
+  const subTotal = options.subTotal || 0;
+  const adjustment = options.adjustment || 0;
+  const taxGroups = options.taxGroups || [];
+  const total = options.total || 0;
+  const currency = options.currency || "CHF";
+  const note = options.note;
+
+  const invoiceNumberDescription = invoiceNumber ? "Rechnungsnummer:" : "";
+  const invoiceNumberValue = invoiceNumber ? invoiceNumber.toString() : "";
 
   const doc = {
     defaultStyle: defaultStyle,
     content: [{
       text: returnAddressText({
-        name: organizationSettings.name,
-        street: address.street,
-        postCode: address.postCode,
-        city: address.city
+        name: organizationAddress.name,
+        street: organizationAddress.street,
+        postCode: organizationAddress.postCode,
+        city: organizationAddress.city
       }),
       margin: [0, 100, 0, 0],
       fontSize: 8,
@@ -86,16 +99,16 @@ function getTemplate(invoice, profile) {
       table: {
         widths: ["auto", "*", "auto", "auto"],
         body: [
-          [invoice.contactName || "", "", "Datum:", {
-            text: invoice.date.format("DD.MM.YYYY"),
+          [billingAddress.name || "", "", "Datum:", {
+            text: date.format("DD.MM.YYYY"),
             alignment: "right"
           }],
           [billingAddress.street || "", "", "Zahlbar bis:", {
-            text: invoice.dueDate.format("DD.MM.YYYY"),
+            text: dueDate.format("DD.MM.YYYY"),
             alignment: "right"
           }],
-          [(billingAddress.postCode || "") + " " + (billingAddress.city || ""), "", "Rechnungsnummer:", {
-            text: invoice.number.toString(),
+          [(billingAddress.postCode || "") + " " + (billingAddress.city || ""), "", invoiceNumberDescription, {
+            text: invoiceNumberValue,
             alignment: "right"
           }]
         ]
@@ -126,29 +139,31 @@ function getTemplate(invoice, profile) {
     }]
   };
 
-  invoice.itemDetails.forEach((itemDetail) => {
-    let description = itemDetail.name;
-    if (itemDetail.description) {
+  items.forEach((item) => {
+    let description;
+    if (item.description) {
       description = {
         stack: [
-          itemDetail.name, {
+          item.name, {
             margin: [0, 2, 0, 0],
-            text: itemDetail.description,
+            text: item.description,
             color: "gray"
           }
         ]
       };
+    } else {
+      description = item.name;
     }
 
     doc.content[3].table.body.push([
       description, {
-        text: itemDetail.quantity.toFixed(2),
+        text: item.quantity.toFixed(2),
         alignment: "right"
       }, {
-        text: itemDetail.rate.toFixed(2),
+        text: item.rate.toFixed(2),
         alignment: "right"
       }, {
-        text: itemDetail.total.toFixed(2),
+        text: item.total.toFixed(2),
         alignment: "right"
       }
     ]);
@@ -156,38 +171,42 @@ function getTemplate(invoice, profile) {
 
   let tableFooter = [];
 
-  if (invoice.adjustment || invoice.taxGroups.length) {
-    tableFooter.push(
-      ["Zwischensumme", {
-        text: invoice.subTotal.toFixed(2),
-        alignment: "right"
-      }]
+  if (subTotal && subTotal !== total) {
+    if (adjustment || taxGroups.length) {
+      tableFooter.push(
+        ["Zwischensumme", {
+          text: subTotal.toFixed(2),
+          alignment: "right"
+        }]
+      );
+    }
+  }
+
+  if (taxGroups.length) {
+    tableFooter = tableFooter.concat(
+      taxGroups.map((taxGroup) => {
+        return [
+          taxGroup.name, {
+            text: taxGroup.amount.toFixed(2),
+            alignment: "right"
+          }
+        ];
+      })
     );
   }
 
-  tableFooter = tableFooter.concat(
-    invoice.taxGroups.map((taxGroup) => {
-      return [
-        taxGroup.name, {
-          text: taxGroup.amount.toFixed(2),
-          alignment: "right"
-        }
-      ];
-    })
-  );
-
-  if (invoice.adjustment) {
+  if (adjustment) {
     tableFooter.push([
       "Anpassung", {
-        text: invoice.adjustment.toFixed(2),
+        text: adjustment.toFixed(2),
         alignment: "right"
       }
     ]);
   }
 
   tableFooter.push([
-    "Gesamtsumme " + (invoice.currencyId || "CHF"), {
-      text: invoice.total.toFixed(2),
+    "Gesamtsumme " + currency, {
+      text: total.toFixed(2),
       alignment: "right"
     }
   ]);
@@ -202,12 +221,14 @@ function getTemplate(invoice, profile) {
     }
   });
 
-  doc.content.push({
-    text: invoice.note || profile.invoiceSettings.note || "",
-    margin: [0, 20, 0, 0],
-    color: "gray",
-    fontSize: 8
-  });
+  if (note) {
+    doc.content.push({
+      text: note,
+      margin: [0, 20, 0, 0],
+      color: "gray",
+      fontSize: 8
+    });
+  }
 
   return doc;
 }

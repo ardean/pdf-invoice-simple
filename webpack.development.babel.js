@@ -10,7 +10,7 @@ config.devtool = "source-map";
 config.module.preLoaders.shift();
 config.devServer = {
   inline: true,
-  port: 3000,
+  port: 4000,
   contentBase: "./dist"
 };
 config.plugins.shift();

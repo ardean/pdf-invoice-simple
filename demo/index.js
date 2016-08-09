@@ -2,18 +2,30 @@ import $ from "jquery";
 import moment from "moment";
 import simpleInvoice from "../src";
 
-const invoice = {
-  contactName: "Mein Kontakt",
-  number: 12,
-  date: moment(),
-  dueDate: moment(),
+const pdf = simpleInvoice({
+  organizationAddress: {
+    name: "Orbin",
+    street: "Strasse 333",
+    postCode: "3474",
+    city: "Stadt"
+  },
   billingAddress: {
+    name: "Mein Kontakt",
     street: "Strasse 2",
     postCode: "78556",
     city: "Andere Stadt"
   },
-  itemDetails: [{
+  date: moment(),
+  dueDate: moment().add(12, "days"),
+  invoiceNumber: 12,
+  items: [{
     name: "Item Name",
+    description: "Item Description",
+    quantity: 2,
+    rate: 200,
+    total: 400
+  }, {
+    name: "Item Name 2",
     quantity: 2,
     rate: 200,
     total: 400
@@ -25,24 +37,9 @@ const invoice = {
   }],
   adjustment: 20,
   total: 430,
-  currencyId: "EUR"
-};
-
-const profile = {
-  organizationSettings: {
-    name: "Orbin",
-    address: {
-      street: "Strasse 333",
-      postCode: "3474",
-      city: "Stadt"
-    }
-  },
-  invoiceSettings: {
-    note: "Meine Notiz"
-  }
-};
-
-const pdf = simpleInvoice(invoice, profile);
+  currency: "EUR",
+  note: "Meine Notiz"
+});
 pdf.getDataUrl({}, (data) => {
   $("iframe").attr("src", data);
 });
