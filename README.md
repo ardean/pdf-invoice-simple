@@ -1,7 +1,9 @@
 # pdf-invoice-simple
-A simple pdf invoice template
+[![NPM Version][npm-image]][downloads-url] [![NPM Downloads][downloads-image]][downloads-url]
 
-Example:
+**A simple pdf invoice template**
+
+## Usage
 
 ```javascript
 import moment from "moment";
@@ -49,3 +51,12 @@ simpleInvoice({
   note: "Meine Notiz"
 }).print("invoice.pdf");
 ```
+
+## License
+
+[MIT](LICENSE)
+
+[downloads-image]: https://img.shields.io/npm/dm/pdf-invoice-simple.svg
+[downloads-url]: https://npmjs.org/package/pdf-invoice-simple
+[npm-image]: https://img.shields.io/npm/v/pdf-invoice-simple.svg
+[npm-url]: https://npmjs.org/package/pdf-invoice-simple
