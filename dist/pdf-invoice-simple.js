@@ -7,7 +7,7 @@
 		var a = typeof exports === 'object' ? factory(require("moment"), require("pdfmake-browser"), require("roboto-base64")) : factory(root["moment"], root["pdfmake-browser"], root["roboto-base64"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_5__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -60,15 +60,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _moment = __webpack_require__(1);
+	var _layout = __webpack_require__(1);
+
+	var _headTable = __webpack_require__(2);
+
+	var _headTable2 = _interopRequireDefault(_headTable);
+
+	var _moment = __webpack_require__(3);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _pdfmakeBrowser = __webpack_require__(2);
+	var _pdfmakeBrowser = __webpack_require__(4);
 
 	var _pdfmakeBrowser2 = _interopRequireDefault(_pdfmakeBrowser);
 
-	var _robotoBase = __webpack_require__(3);
+	var _robotoBase = __webpack_require__(5);
 
 	var _robotoBase2 = _interopRequireDefault(_robotoBase);
 
@@ -76,48 +82,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var defaultStyle = {
 	  fontSize: 10
-	};
-
-	var tableLayout = {
-	  hLineWidth: function hLineWidth(i) {
-	    return i === 1 ? 1 : 0;
-	  },
-	  vLineWidth: function vLineWidth() {
-	    return 0;
-	  },
-	  paddingLeft: function paddingLeft() {
-	    return 0;
-	  },
-	  paddingRight: function paddingRight() {
-	    return 0;
-	  },
-	  paddingTop: function paddingTop(i) {
-	    return i === 1 ? 15 : 5;
-	  },
-	  paddingBottom: function paddingBottom() {
-	    return 5;
-	  }
-	};
-
-	var footerLayout = {
-	  hLineWidth: function hLineWidth(i, node) {
-	    return i === 0 || i === node.table.body.length || i === node.table.body.length - 1 ? 1 : 0;
-	  },
-	  vLineWidth: function vLineWidth() {
-	    return 0;
-	  },
-	  paddingLeft: function paddingLeft() {
-	    return 0;
-	  },
-	  paddingRight: function paddingRight() {
-	    return 0;
-	  },
-	  paddingTop: function paddingTop(i, node) {
-	    return i === 0 || i === node.table.body.length - 1 ? 10 : 5;
-	  },
-	  paddingBottom: function paddingBottom(i, node) {
-	    return i === node.table.body.length - 1 || i === node.table.body.length - 2 ? 10 : 5;
-	  }
 	};
 
 	exports.default = function (options) {
@@ -140,8 +104,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var total = options.total || 0;
 	  var currency = options.currency || "CHF";
 	  var note = options.note;
+	  var invertHeader = options.invertHeader || false;
 
 	  var leftFields = [];
+	  var organizationAddressText = organizationAddress ? getFlatAddressText(organizationAddress) : "";
+	  if (organizationAddressText) {
+	    leftFields.push({
+	      value: organizationAddressText,
+	      fontSize: 8,
+	      color: "gray",
+	      margin: [0, 0, 0, 10]
+	    });
+	  }
 	  if (billingAddress.name) {
 	    leftFields.push(billingAddress.name);
 	  }
@@ -157,6 +131,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  var rightFields = [];
+	  if (organizationAddressText) {
+	    rightFields.push({
+	      key: ""
+	    });
+	  }
 	  if (date) {
 	    rightFields.push({
 	      key: "Datum:",
@@ -182,31 +161,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	  }
 
-	  var headTableBody = [];
-	  var tableHeight = Math.max(leftFields.length, rightFields.length);
-	  for (var i = 0; i < tableHeight; i++) {
-	    var leftValue = leftFields[i];
-	    var rightObject = rightFields[i] || {};
-	    headTableBody.push([leftValue || "", "", rightObject.key || "", {
-	      text: rightObject.value || "",
-	      alignment: "right"
-	    }]);
-	  }
+	  var oldLeftFields = leftFields;
+	  leftFields = invertHeader ? rightFields : leftFields;
+	  rightFields = invertHeader ? oldLeftFields : rightFields;
 
-	  var organizationAddressText = organizationAddress ? getFlatAddressText(organizationAddress) : "";
+	  var headTableWidths = _headTable2.default.getWidths(leftFields, rightFields);
+	  var headTableBody = _headTable2.default.getBody(leftFields, rightFields);
 
 	  var doc = {
 	    defaultStyle: defaultStyle,
 	    content: [{
-	      text: organizationAddressText,
 	      margin: [0, 100, 0, 0],
-	      fontSize: 8,
-	      color: "gray"
-	    }, {
-	      margin: [0, 10, 0, 0],
 	      layout: "noBorders",
 	      table: {
-	        widths: ["auto", "*", "auto", "auto"],
+	        widths: headTableWidths,
 	        body: headTableBody
 	      }
 	    }, {
@@ -215,7 +183,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      margin: [0, 50, 0, 0]
 	    }, {
 	      margin: [0, 25, 0, 0],
-	      layout: tableLayout,
+	      layout: _layout.table,
 	      table: {
 	        headerRows: 1,
 	        widths: ["*", 70, 70, 70],
@@ -247,7 +215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      description = item.name;
 	    }
 
-	    doc.content[3].table.body.push([description, {
+	    doc.content[2].table.body.push([description, {
 	      text: item.quantity.toFixed(2),
 	      alignment: "right"
 	    }, {
@@ -293,7 +261,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  doc.content.push({
 	    margin: [0, 25, 0, 0],
-	    layout: footerLayout,
+	    layout: _layout.footer,
 	    table: {
 	      headerRows: 1,
 	      widths: ["*", "auto"],
@@ -325,19 +293,161 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var table = exports.table = {
+	  hLineWidth: function hLineWidth(i) {
+	    return i === 1 ? 1 : 0;
+	  },
+	  vLineWidth: function vLineWidth() {
+	    return 0;
+	  },
+	  paddingLeft: function paddingLeft() {
+	    return 0;
+	  },
+	  paddingRight: function paddingRight() {
+	    return 0;
+	  },
+	  paddingTop: function paddingTop(i) {
+	    return i === 1 ? 15 : 5;
+	  },
+	  paddingBottom: function paddingBottom() {
+	    return 5;
+	  }
+	};
+
+	var footer = exports.footer = {
+	  hLineWidth: function hLineWidth(i, node) {
+	    return i === 0 || i === node.table.body.length || i === node.table.body.length - 1 ? 1 : 0;
+	  },
+	  vLineWidth: function vLineWidth() {
+	    return 0;
+	  },
+	  paddingLeft: function paddingLeft() {
+	    return 0;
+	  },
+	  paddingRight: function paddingRight() {
+	    return 0;
+	  },
+	  paddingTop: function paddingTop(i, node) {
+	    return i === 0 || i === node.table.body.length - 1 ? 10 : 5;
+	  },
+	  paddingBottom: function paddingBottom(i, node) {
+	    return i === node.table.body.length - 1 || i === node.table.body.length - 2 ? 10 : 5;
+	  }
+	};
 
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var HeadTable = function () {
+	  function HeadTable() {
+	    _classCallCheck(this, HeadTable);
+	  }
+
+	  _createClass(HeadTable, [{
+	    key: "getWidths",
+	    value: function getWidths(leftFields, rightFields) {
+	      var left = this.getWidth(leftFields[0]);
+	      var right = this.getWidth(rightFields[0]);
+	      return left.concat("*", right);
+	    }
+	  }, {
+	    key: "getWidth",
+	    value: function getWidth(field) {
+	      if ((typeof field === "undefined" ? "undefined" : _typeof(field)) === "object" && typeof field.key === "string") {
+	        return ["auto", "auto"];
+	      } else {
+	        return ["auto"];
+	      }
+	    }
+	  }, {
+	    key: "getBody",
+	    value: function getBody(leftFields, rightFields) {
+	      var headTableBody = [];
+	      var tableHeight = Math.max(leftFields.length, rightFields.length);
+
+	      for (var i = 0; i < tableHeight; i++) {
+	        var left = this.getField(leftFields[i]);
+	        var right = this.getField(rightFields[i]);
+	        var line = left.concat("", right);
+	        headTableBody.push(line);
+	      }
+
+	      return headTableBody;
+	    }
+	  }, {
+	    key: "getField",
+	    value: function getField(field) {
+	      if ((typeof field === "undefined" ? "undefined" : _typeof(field)) === "object" && typeof field.key === "string") {
+	        field = field || {};
+
+	        return [field.key || "", {
+	          text: field.value || "",
+	          alignment: "right"
+	        }];
+	      } else {
+	        field = field || "";
+
+	        var mapped = {
+	          text: typeof field === "string" ? field : field.value || ""
+	        };
+
+	        if (field.fontSize) {
+	          mapped.fontSize = field.fontSize;
+	        }
+
+	        if (field.color) {
+	          mapped.color = field.color;
+	        }
+
+	        if (field.margin) {
+	          mapped.margin = field.margin;
+	        }
+
+	        return [mapped];
+	      }
+	    }
+	  }]);
+
+	  return HeadTable;
+	}();
+
+	exports.default = new HeadTable();
 
 /***/ },
 /* 3 */
 /***/ function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_5__;
 
 /***/ }
 /******/ ])

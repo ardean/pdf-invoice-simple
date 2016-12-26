@@ -3,6 +3,7 @@ import moment from "moment";
 import simpleInvoice from "../src";
 
 const pdf = simpleInvoice({
+  invertHeader: true,
   organizationAddress: {
     name: "Orbin",
     street: "Strasse 333",

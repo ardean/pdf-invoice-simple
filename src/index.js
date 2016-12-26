@@ -1,61 +1,14 @@
+import {
+  table as tableLayout,
+  footer as footerLayout
+} from "./layout";
+import headTable from "./head-table";
 import moment from "moment";
 import Pdf from "pdfmake-browser";
 import robotoFont from "roboto-base64";
 
 const defaultStyle = {
   fontSize: 10
-};
-
-const tableLayout = {
-  hLineWidth: (i) => {
-    return (i === 1) ? 1 : 0;
-  },
-  vLineWidth: () => {
-    return 0;
-  },
-  paddingLeft: () => {
-    return 0;
-  },
-  paddingRight: () => {
-    return 0;
-  },
-  paddingTop: (i) => {
-    return (i === 1) ? 15 : 5;
-  },
-  paddingBottom: () => {
-    return 5;
-  }
-};
-
-const footerLayout = {
-  hLineWidth: (i, node) => {
-    return (
-      i === 0 ||
-      i === node.table.body.length ||
-      i === node.table.body.length - 1
-    ) ? 1 : 0;
-  },
-  vLineWidth: () => {
-    return 0;
-  },
-  paddingLeft: () => {
-    return 0;
-  },
-  paddingRight: () => {
-    return 0;
-  },
-  paddingTop: (i, node) => {
-    return (
-      i === 0 ||
-      i === node.table.body.length - 1
-    ) ? 10 : 5;
-  },
-  paddingBottom: (i, node) => {
-    return (
-      i === node.table.body.length - 1 ||
-      i === node.table.body.length - 2
-    ) ? 10 : 5;
-  }
 };
 
 export default (options) => {
@@ -78,8 +31,18 @@ function getTemplate(options) {
   const total = options.total || 0;
   const currency = options.currency || "CHF";
   const note = options.note;
+  const invertHeader = options.invertHeader || false;
 
-  const leftFields = [];
+  let leftFields = [];
+  const organizationAddressText = organizationAddress ? getFlatAddressText(organizationAddress) : "";
+  if (organizationAddressText) {
+    leftFields.push({
+      value: organizationAddressText,
+      fontSize: 8,
+      color: "gray",
+      margin: [0, 0, 0, 10]
+    });
+  }
   if (billingAddress.name) {
     leftFields.push(billingAddress.name);
   }
@@ -94,7 +57,12 @@ function getTemplate(options) {
     leftFields.push(location);
   }
 
-  const rightFields = [];
+  let rightFields = [];
+  if (organizationAddressText) {
+    rightFields.push({
+      key: ""
+    });
+  }
   if (date) {
     rightFields.push({
       key: "Datum:",
@@ -120,35 +88,20 @@ function getTemplate(options) {
     });
   }
 
-  const headTableBody = [];
-  const tableHeight = Math.max(leftFields.length, rightFields.length);
-  for (let i = 0; i < tableHeight; i++) {
-    const leftValue = leftFields[i];
-    const rightObject = rightFields[i] || {};
-    headTableBody.push([
-      leftValue || "",
-      "",
-      rightObject.key || "", {
-        text: rightObject.value || "",
-        alignment: "right"
-      }
-    ]);
-  }
+  const oldLeftFields = leftFields;
+  leftFields = invertHeader ? rightFields : leftFields;
+  rightFields = invertHeader ? oldLeftFields : rightFields;
 
-  const organizationAddressText = organizationAddress ? getFlatAddressText(organizationAddress) : "";
+  const headTableWidths = headTable.getWidths(leftFields, rightFields);
+  const headTableBody = headTable.getBody(leftFields, rightFields);
 
   const doc = {
     defaultStyle: defaultStyle,
     content: [{
-      text: organizationAddressText,
       margin: [0, 100, 0, 0],
-      fontSize: 8,
-      color: "gray"
-    }, {
-      margin: [0, 10, 0, 0],
       layout: "noBorders",
       table: {
-        widths: ["auto", "*", "auto", "auto"],
+        widths: headTableWidths,
         body: headTableBody
       }
     }, {
@@ -193,7 +146,7 @@ function getTemplate(options) {
       description = item.name;
     }
 
-    doc.content[3].table.body.push([
+    doc.content[2].table.body.push([
       description, {
         text: item.quantity.toFixed(2),
         alignment: "right"

@@ -8,6 +8,7 @@ import moment from "moment";
 import simpleInvoice from "pdf-invoice-simple";
 
 simpleInvoice({
+  invertHeader: true,
   organizationAddress: {
     name: "Orbin",
     street: "Strasse 333",
