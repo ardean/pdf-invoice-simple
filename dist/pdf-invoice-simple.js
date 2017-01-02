@@ -170,8 +170,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  var doc = {
 	    defaultStyle: defaultStyle,
+	    pageMargins: [60, 110, 60, 150],
 	    content: [{
-	      margin: [0, 100, 0, 0],
+	      margin: [0, 30, 0, 0],
 	      layout: "noBorders",
 	      table: {
 	        widths: headTableWidths,
@@ -271,10 +272,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  if (note) {
 	    doc.content.push({
-	      text: note,
 	      margin: [0, 20, 0, 0],
 	      color: "gray",
-	      fontSize: 8
+	      fontSize: 8,
+	      table: {
+	        dontBreakRows: true,
+	        body: [[{
+	          text: note
+	        }]]
+	      },
+	      layout: "noBorders"
 	    });
 	  }
 
