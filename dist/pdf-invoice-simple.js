@@ -186,7 +186,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      margin: [0, 30, 0, 0],
 	      layout: "noBorders",
 	      table: {
-	        widths: ["auto", "auto", "*", "auto", "auto"],
+	        widths: invertHeader ? ["auto", 210, 0, "auto", "auto"] : ["auto", "auto", "*", "auto", "auto"],
 	        body: headTableBody
 	      }
 	    }, {
