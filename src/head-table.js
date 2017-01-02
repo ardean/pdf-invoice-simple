@@ -1,26 +1,16 @@
 class HeadTable {
-  getWidths(leftFields, rightFields) {
-    const left = this.getWidth(leftFields[0]);
-    const right = this.getWidth(rightFields[0]);
-    return left.concat("*", right);
-  }
-
-  getWidth(field) {
-    if (typeof field === "object" && typeof field.key === "string") {
-      return ["auto", "auto"];
-    } else {
-      return ["auto"];
-    }
-  }
-
   getBody(leftFields, rightFields) {
     const headTableBody = [];
     const tableHeight = Math.max(leftFields.length, rightFields.length);
 
-    for (let i = 0; i < tableHeight; i++) {
+    for (let i = 0; i < tableHeight; i += 2) {
       const left = this.getField(leftFields[i]);
+      const left2 = this.getField(leftFields[i + 1]);
+
       const right = this.getField(rightFields[i]);
-      const line = left.concat("", right);
+      const right2 = this.getField(rightFields[i + 1]);
+
+      const line = [].concat(left, left2, "", right, right2);
       headTableBody.push(line);
     }
 
@@ -28,36 +18,8 @@ class HeadTable {
   }
 
   getField(field) {
-    if (typeof field === "object" && typeof field.key === "string") {
-      field = field || {};
-
-      return [
-        field.key || "", {
-          text: field.value || "",
-          alignment: "right"
-        }
-      ];
-    } else {
-      field = field || "";
-
-      const mapped = {
-        text: typeof field === "string" ? field : field.value || ""
-      };
-
-      if (field.fontSize) {
-        mapped.fontSize = field.fontSize;
-      }
-
-      if (field.color) {
-        mapped.color = field.color;
-      }
-
-      if (field.margin) {
-        mapped.margin = field.margin;
-      }
-
-      return [mapped];
-    }
+    if (!field) return "";
+    return field;
   }
 }
 

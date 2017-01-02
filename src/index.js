@@ -37,54 +37,66 @@ function getTemplate(options) {
   const organizationAddressText = organizationAddress ? getFlatAddressText(organizationAddress) : "";
   if (organizationAddressText) {
     leftFields.push({
-      value: organizationAddressText,
+      text: organizationAddressText,
       fontSize: 8,
       color: "gray",
       margin: [0, 0, 0, 10]
-    });
+    }, "");
   }
   if (billingAddress.name) {
-    leftFields.push(billingAddress.name);
+    leftFields.push({
+      text: billingAddress.name
+    }, "");
   }
   if (billingAddress.attn) {
-    leftFields.push(billingAddress.attn);
+    leftFields.push({
+      text: billingAddress.attn
+    }, "");
   }
   if (billingAddress.street) {
-    leftFields.push(billingAddress.street);
+    leftFields.push({
+      text: billingAddress.street
+    }, "");
   }
   const location = (billingAddress.postCode || "") + (billingAddress.city && billingAddress.postCode ? " " : "") + (billingAddress.city || "");
   if (location) {
-    leftFields.push(location);
+    leftFields.push({
+      text: location
+    }, "");
   }
 
   let rightFields = [];
   if (organizationAddressText) {
     rightFields.push({
-      key: ""
-    });
+      text: ""
+    }, "");
   }
   if (date) {
     rightFields.push({
-      key: "Datum:",
-      value: date.format("DD.MM.YYYY")
+      text: "Datum:"
+    }, {
+      text: date.format("DD.MM.YYYY")
     });
   }
   if (dueDate) {
     rightFields.push({
-      key: "Zahlbar bis:",
-      value: dueDate.format("DD.MM.YYYY")
+      text: "Zahlbar bis:"
+    }, {
+      text: dueDate.format("DD.MM.YYYY")
     });
   }
   if (invoiceNumber) {
     rightFields.push({
-      key: "Rechnungsnummer:",
-      value: invoiceNumber.toString()
+      text: "Rechnungsnummer:"
+    }, {
+      text: invoiceNumber.toString()
     });
   }
   if (customerName) {
     rightFields.push({
-      key: "Kunde:",
-      value: customerName
+      text: "Kunde:"
+    }, {
+      text: customerName
     });
   }
 
@@ -92,7 +104,6 @@ function getTemplate(options) {
   leftFields = invertHeader ? rightFields : leftFields;
   rightFields = invertHeader ? oldLeftFields : rightFields;
 
-  const headTableWidths = headTable.getWidths(leftFields, rightFields);
   const headTableBody = headTable.getBody(leftFields, rightFields);
 
   const doc = {
@@ -102,7 +113,7 @@ function getTemplate(options) {
       margin: [0, 30, 0, 0],
       layout: "noBorders",
       table: {
-        widths: headTableWidths,
+        widths: ["auto", "auto", "*", "auto", "auto"],
         body: headTableBody
       }
     }, {

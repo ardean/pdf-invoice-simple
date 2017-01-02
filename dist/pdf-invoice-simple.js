@@ -110,54 +110,66 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var organizationAddressText = organizationAddress ? getFlatAddressText(organizationAddress) : "";
 	  if (organizationAddressText) {
 	    leftFields.push({
-	      value: organizationAddressText,
+	      text: organizationAddressText,
 	      fontSize: 8,
 	      color: "gray",
 	      margin: [0, 0, 0, 10]
-	    });
+	    }, "");
 	  }
 	  if (billingAddress.name) {
-	    leftFields.push(billingAddress.name);
+	    leftFields.push({
+	      text: billingAddress.name
+	    }, "");
 	  }
 	  if (billingAddress.attn) {
-	    leftFields.push(billingAddress.attn);
+	    leftFields.push({
+	      text: billingAddress.attn
+	    }, "");
 	  }
 	  if (billingAddress.street) {
-	    leftFields.push(billingAddress.street);
+	    leftFields.push({
+	      text: billingAddress.street
+	    }, "");
 	  }
 	  var location = (billingAddress.postCode || "") + (billingAddress.city && billingAddress.postCode ? " " : "") + (billingAddress.city || "");
 	  if (location) {
-	    leftFields.push(location);
+	    leftFields.push({
+	      text: location
+	    }, "");
 	  }
 
 	  var rightFields = [];
 	  if (organizationAddressText) {
 	    rightFields.push({
-	      key: ""
-	    });
+	      text: ""
+	    }, "");
 	  }
 	  if (date) {
 	    rightFields.push({
-	      key: "Datum:",
-	      value: date.format("DD.MM.YYYY")
+	      text: "Datum:"
+	    }, {
+	      text: date.format("DD.MM.YYYY")
 	    });
 	  }
 	  if (dueDate) {
 	    rightFields.push({
-	      key: "Zahlbar bis:",
-	      value: dueDate.format("DD.MM.YYYY")
+	      text: "Zahlbar bis:"
+	    }, {
+	      text: dueDate.format("DD.MM.YYYY")
 	    });
 	  }
 	  if (invoiceNumber) {
 	    rightFields.push({
-	      key: "Rechnungsnummer:",
-	      value: invoiceNumber.toString()
+	      text: "Rechnungsnummer:"
+	    }, {
+	      text: invoiceNumber.toString()
 	    });
 	  }
 	  if (customerName) {
 	    rightFields.push({
-	      key: "Kunde:",
-	      value: customerName
+	      text: "Kunde:"
+	    }, {
+	      text: customerName
 	    });
 	  }
 
@@ -165,7 +177,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  leftFields = invertHeader ? rightFields : leftFields;
 	  rightFields = invertHeader ? oldLeftFields : rightFields;
 
-	  var headTableWidths = _headTable2.default.getWidths(leftFields, rightFields);
 	  var headTableBody = _headTable2.default.getBody(leftFields, rightFields);
 
 	  var doc = {
@@ -175,7 +186,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      margin: [0, 30, 0, 0],
 	      layout: "noBorders",
 	      table: {
-	        widths: headTableWidths,
+	        widths: ["auto", "auto", "*", "auto", "auto"],
 	        body: headTableBody
 	      }
 	    }, {
@@ -357,8 +368,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -369,31 +378,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  _createClass(HeadTable, [{
-	    key: "getWidths",
-	    value: function getWidths(leftFields, rightFields) {
-	      var left = this.getWidth(leftFields[0]);
-	      var right = this.getWidth(rightFields[0]);
-	      return left.concat("*", right);
-	    }
-	  }, {
-	    key: "getWidth",
-	    value: function getWidth(field) {
-	      if ((typeof field === "undefined" ? "undefined" : _typeof(field)) === "object" && typeof field.key === "string") {
-	        return ["auto", "auto"];
-	      } else {
-	        return ["auto"];
-	      }
-	    }
-	  }, {
 	    key: "getBody",
 	    value: function getBody(leftFields, rightFields) {
 	      var headTableBody = [];
 	      var tableHeight = Math.max(leftFields.length, rightFields.length);
 
-	      for (var i = 0; i < tableHeight; i++) {
+	      for (var i = 0; i < tableHeight; i += 2) {
 	        var left = this.getField(leftFields[i]);
+	        var left2 = this.getField(leftFields[i + 1]);
+
 	        var right = this.getField(rightFields[i]);
-	        var line = left.concat("", right);
+	        var right2 = this.getField(rightFields[i + 1]);
+
+	        var line = [].concat(left, left2, "", right, right2);
 	        headTableBody.push(line);
 	      }
 
@@ -402,34 +399,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "getField",
 	    value: function getField(field) {
-	      if ((typeof field === "undefined" ? "undefined" : _typeof(field)) === "object" && typeof field.key === "string") {
-	        field = field || {};
-
-	        return [field.key || "", {
-	          text: field.value || "",
-	          alignment: "right"
-	        }];
-	      } else {
-	        field = field || "";
-
-	        var mapped = {
-	          text: typeof field === "string" ? field : field.value || ""
-	        };
-
-	        if (field.fontSize) {
-	          mapped.fontSize = field.fontSize;
-	        }
-
-	        if (field.color) {
-	          mapped.color = field.color;
-	        }
-
-	        if (field.margin) {
-	          mapped.margin = field.margin;
-	        }
-
-	        return [mapped];
-	      }
+	      if (!field) return "";
+	      return field;
 	    }
 	  }]);
 
