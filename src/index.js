@@ -1,20 +1,14 @@
-import {
-  table as tableLayout,
-  footer as footerLayout
-} from "./layout";
+import { table as tableLayout, footer as footerLayout } from "./layout";
 import headTable from "./head-table";
 import moment from "moment";
-import Pdf from "pdfmake-browser";
-import robotoFont from "roboto-base64";
+import pdfMake from "pdfmake";
 
 const defaultStyle = {
   fontSize: 10
 };
 
 export default (options) => {
-  return new Pdf(getTemplate(options), {
-    Roboto: robotoFont
-  });
+  return pdfMake.createPdf(getTemplate(options));
 };
 
 function getTemplate(options) {

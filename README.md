@@ -1,7 +1,9 @@
 # pdf-invoice-simple
 [![NPM Version][npm-image]][downloads-url] [![NPM Downloads][downloads-image]][downloads-url]
 
-**A simple pdf invoice template**
+**A Simple PDF Invoice Template**
+
+Currently german only.
 
 ## Usage
 
@@ -49,7 +51,7 @@ simpleInvoice({
   total: 430,
   currency: "EUR",
   note: "Meine Notiz"
-}).print("invoice.pdf");
+}).download("invoice.pdf");
 ```
 
 ## License

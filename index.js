@@ -1,6 +1,7 @@
 import $ from "jquery";
 import moment from "moment";
-import simpleInvoice from "../src";
+import simpleInvoice from "./src/index.js";
+import "pdfmake/vfs_fonts.js";
 
 const pdf = simpleInvoice({
   invertHeader: true,
@@ -43,6 +44,7 @@ const pdf = simpleInvoice({
   currency: "EUR",
   note: "Meine Notiz"
 });
-pdf.getDataUrl({}, (data) => {
+
+pdf.getDataUrl((data) => {
   $("iframe").attr("src", data);
 });
