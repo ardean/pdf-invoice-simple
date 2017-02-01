@@ -2,7 +2,7 @@
   "name": "pdf-invoice-simple",
   "description": "A Simple PDF Invoice Template",
   "main": "dist/pdf-invoice-simple.js",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "author": "Orbin",
   "keywords": [
     "pdf",
@@ -24,6 +24,7 @@
   },
   "jspm": {
     "jspmNodeConversion": false,
+    "format": "amd",
     "dependencies": {
       "moment": "npm:moment@^2.17.1",
       "pdfmake": "github:bpampuch/pdfmake@^0.1.25"
