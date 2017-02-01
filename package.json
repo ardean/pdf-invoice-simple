@@ -2,7 +2,7 @@
   "name": "pdf-invoice-simple",
   "description": "A Simple PDF Invoice Template",
   "main": "dist/pdf-invoice-simple.js",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "author": "Orbin",
   "keywords": [
     "pdf",
