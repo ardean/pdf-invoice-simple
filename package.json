@@ -1,7 +1,8 @@
 {
   "name": "pdf-invoice-simple",
   "description": "A Simple PDF Invoice Template",
-  "version": "0.4.0",
+  "main": "dist/pdf-invoice-simple.js",
+  "version": "0.4.1",
   "author": "Orbin",
   "keywords": [
     "pdf",
@@ -18,7 +19,8 @@
     "jspm": "^0.16.52"
   },
   "scripts": {
-    "start": "http-server ./"
+    "start": "http-server ./",
+    "build": "jspm bundle [src/**/*.js] dist/pdf-invoice-simple.js"
   },
   "jspm": {
     "main": "src/index.js",

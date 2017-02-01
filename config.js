@@ -12,6 +12,36 @@ System.config({
     "github:*": "jspm_packages/github/*",
     "npm:*": "jspm_packages/npm/*"
   },
+  bundles: {
+    "build.js": [
+      "src/index.js",
+      "github:bpampuch/pdfmake@0.1.25.js",
+      "github:bpampuch/pdfmake@0.1.25/pdfmake.js",
+      "npm:moment@2.17.1.js",
+      "npm:moment@2.17.1/moment.js",
+      "src/head-table.js",
+      "npm:babel-runtime@5.8.38/helpers/class-call-check.js",
+      "npm:babel-runtime@5.8.38/helpers/create-class.js",
+      "npm:babel-runtime@5.8.38/core-js/object/define-property.js",
+      "npm:core-js@1.2.7/library/fn/object/define-property.js",
+      "npm:core-js@1.2.7/library/modules/$.js",
+      "src/layout.js"
+    ],
+    "dist/pdf-invoice-simple.js": [
+      "src/index.js",
+      "github:bpampuch/pdfmake@0.1.25.js",
+      "github:bpampuch/pdfmake@0.1.25/pdfmake.js",
+      "npm:moment@2.17.1.js",
+      "npm:moment@2.17.1/moment.js",
+      "src/head-table.js",
+      "npm:babel-runtime@5.8.38/helpers/class-call-check.js",
+      "npm:babel-runtime@5.8.38/helpers/create-class.js",
+      "npm:babel-runtime@5.8.38/core-js/object/define-property.js",
+      "npm:core-js@1.2.7/library/fn/object/define-property.js",
+      "npm:core-js@1.2.7/library/modules/$.js",
+      "src/layout.js"
+    ]
+  },
 
   map: {
     "babel": "npm:babel-core@5.8.38",
