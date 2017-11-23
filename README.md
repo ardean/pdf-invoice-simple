@@ -1,4 +1,6 @@
 # pdf-invoice-simple
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/ardean/pdf-invoice-simple.svg)](https://greenkeeper.io/)
 [![NPM Version][npm-image]][downloads-url] [![NPM Downloads][downloads-image]][downloads-url]
 
 **A Simple PDF Invoice Template**
